@@ -1,0 +1,29 @@
+version: "3"
+volumes : 
+    db_dev: {}
+services:
+    test_web:
+        image: nginx
+        ports:
+          - 80:80
+        volumes:
+          - ./nginx/conf.d:/etc/nginx/conf.d
+        depends_on:
+          - test_application
+    test_database:
+        container_name: test_database
+        volumes:
+          - db_dev:/Users/soy/work/one_around/data
+        image: mysql:5.7
+        environment:
+          MYSQL_DATABASE: test_db
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_HOST: '%'
+        ports:
+          - 3306:3306        
+    test_application:
+        build: .
+        ports:
+          - 8080:8080
+        depends_on:
+          - test_database
